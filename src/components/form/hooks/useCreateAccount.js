@@ -1,9 +1,9 @@
-export const useCreateAccount = ({ accounts, setAccounts }) => {
+export const useCreateAccount = ({ accounts, setAccounts, setMessageError }) => {
 	const createAnAccount = (e, name, surname) => {
 		e.preventDefault();
 
-		if (!name || !surname) {
-			console.log("The Name or Surname field is not filled in");
+		if (!name.trim() || !surname.trim()) {
+			setMessageError("The Name or Surname field is not filled in");
 			return;
 		}
 
@@ -18,7 +18,8 @@ export const useCreateAccount = ({ accounts, setAccounts }) => {
 		const isAccountExists = accounts.some((account) => account.id === newAccount.id);
 
 		if (!isAccountExists) {
-			setAccounts((prev) => [...prev, newAccount]);
+			setAccounts((prev) => [newAccount, ...prev]);
+			setMessageError("");
 		}
 	};
 

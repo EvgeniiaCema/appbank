@@ -11,12 +11,13 @@ import styles from "./usersAccounts.module.scss";
 export const UsersAccounts = ({ accounts, setAccounts }) => {
 	const [amounts, setAmounts] = useState({});
 	const [numberIds, setNumberIds] = useState({});
-	const depositMoney = useDepositMoney({ accounts, setAccounts });
-	const withdrawMoney = useWithdrawMoney({ accounts, setAccounts });
-	const transferMoney = useTransferMoney({ accounts, setAccounts });
-	const deleteAccount = useDeleteAccount({ accounts, setAccounts });
-	const lockedAccount = useLockedAccount({ accounts, setAccounts });
-	const unLockedAccount = useUnLockedAccount({ accounts, setAccounts });
+	const [errorByAccount, setErrorByAccount] = useState({ id: null, message: "" });
+	const depositMoney = useDepositMoney({ accounts, setAccounts, setErrorByAccount });
+	const withdrawMoney = useWithdrawMoney({ accounts, setAccounts, setErrorByAccount });
+	const transferMoney = useTransferMoney({ accounts, setAccounts, setErrorByAccount });
+	const deleteAccount = useDeleteAccount({ accounts, setAccounts, setErrorByAccount });
+	const lockedAccount = useLockedAccount({ accounts, setAccounts, setErrorByAccount });
+	const unLockedAccount = useUnLockedAccount({ accounts, setAccounts, setErrorByAccount });
 
 	const handleAmountChange = (id, value) => {
 		setAmounts((prev) => ({ ...prev, [id]: value }));
@@ -35,12 +36,6 @@ export const UsersAccounts = ({ accounts, setAccounts }) => {
 					<div>
 						balance: {account.balance}
 						<input type="number" value={amounts[account.id] ?? ""} onChange={(e) => handleAmountChange(account.id, e.target.value)} />
-						<input
-							type="number"
-							value={numberIds[account.id] ?? ""}
-							onChange={(e) => handleNumberIdChange(account.id, e.target.value)}
-							placeholder="recipient number"
-						/>
 						<button
 							onClick={() => {
 								depositMoney(account.id, amounts[account.id]);
@@ -57,6 +52,15 @@ export const UsersAccounts = ({ accounts, setAccounts }) => {
 						>
 							withdraw money
 						</button>
+					</div>
+					<div>
+						input Id recipient:
+						<input
+							type="number"
+							value={numberIds[account.id] ?? ""}
+							onChange={(e) => handleNumberIdChange(account.id, e.target.value)}
+							placeholder="recipient number"
+						/>
 						<button
 							onClick={() => {
 								transferMoney({
@@ -77,6 +81,7 @@ export const UsersAccounts = ({ accounts, setAccounts }) => {
 						<button onClick={() => unLockedAccount(account.id)}>unlocked account</button>
 					</div>
 					<div>user ID: {account.id}</div>
+					{errorByAccount.id === account.id && errorByAccount.message && <div className={styles.error}>{errorByAccount.message}</div>}
 					<button onClick={() => deleteAccount(account.id)}>delete account</button>
 				</div>
 			))}

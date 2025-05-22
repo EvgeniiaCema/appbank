@@ -1,10 +1,15 @@
-import { useCreateAccount } from "../usersAccounts/hooks/useCreateAccount";
 import { useState } from "react";
 
+import { useCreateAccount } from "./hooks/useCreateAccount";
+
+import styles from "./form.module.scss";
+
 export const Form = ({ accounts, setAccounts }) => {
-	const createAnAccount = useCreateAccount({ accounts, setAccounts });
+	const [messageError, setMessageError] = useState("");
 	const [name, setName] = useState("");
 	const [surname, setSurname] = useState("");
+
+	const createAnAccount = useCreateAccount({ accounts, setAccounts, setMessageError });
 
 	const handleSubmit = (e) => {
 		const success = createAnAccount(e, name, surname);
@@ -30,6 +35,7 @@ export const Form = ({ accounts, setAccounts }) => {
 					Create account
 				</button>
 			</form>
+			<div className={styles.error}>{setMessageError ? `${messageError}` : ""}</div>
 		</>
 	);
 };
