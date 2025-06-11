@@ -1,10 +1,16 @@
-import styles from "./modal.module.scss";
+import { createPortal } from "react-dom";
 
-export const Modal = ({ isOpen, onClose, stats }) => {
-	if (!isOpen) return null;
+import styles from "./Modal.module.scss";
 
-	return (
-		<div className={styles.overlay}>
+export const Modal = ({ onClose, stats }) => {
+	const handleOverlayClick = (e) => {
+		if (e.target === e.currentTarget) {
+			onClose();
+		}
+	};
+
+	return createPortal(
+		<div className={styles.overlay} onClick={handleOverlayClick}>
 			<div className={styles.modal}>
 				<button className={styles.closeButton} onClick={onClose}>
 					x
@@ -21,6 +27,7 @@ export const Modal = ({ isOpen, onClose, stats }) => {
 					)}
 				</div>
 			</div>
-		</div>
+		</div>,
+		document.body
 	);
 };

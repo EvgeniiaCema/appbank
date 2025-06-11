@@ -2,10 +2,11 @@ import { useState } from "react";
 
 import { useCreateAccount } from "./hooks/useCreateAccount";
 
-import styles from "./form.module.scss";
+import styles from "./Form.module.scss";
 
 export const Form = ({ accounts, setAccounts }) => {
 	const [messageError, setMessageError] = useState("");
+
 	const [name, setName] = useState("");
 	const [surname, setSurname] = useState("");
 
@@ -20,16 +21,24 @@ export const Form = ({ accounts, setAccounts }) => {
 		}
 	};
 
+	const handelSetName = (e) => {
+		setName(e.target.value);
+	};
+
+	const handelSetSurname = (e) => {
+		setSurname(e.target.value);
+	};
+
 	return (
 		<>
 			<form>
 				<label>
-					Username:
-					<input type="text" name="username" placeholder="name" value={name} onChange={(e) => setName(e.target.value)} />
+					User name:
+					<input type="text" name="username" placeholder="name" value={name} onChange={handelSetName} />
 				</label>
 				<label>
-					Usersurname:
-					<input type="text" name="surname" placeholder="surname" value={surname} onChange={(e) => setSurname(e.target.value)} />
+					User surname:
+					<input type="text" name="surname" placeholder="surname" value={surname} onChange={handelSetSurname} />
 				</label>
 				<button type="submit" onClick={handleSubmit}>
 					Create account

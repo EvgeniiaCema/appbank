@@ -1,5 +1,9 @@
-export const useLogStats = ({ accounts }) => {
-	const logStats = () => {
+import { useState } from "react";
+
+export const useGetStats = (accounts) => {
+	const [stats, setStats] = useState(null);
+
+	const calculateStats = () => {
 		const balance = accounts.reduce((accum, account) => {
 			accum += account.balance;
 			return accum;
@@ -21,13 +25,13 @@ export const useLogStats = ({ accounts }) => {
 			}
 		}
 
-		return {
+		setStats({
 			balance,
 			users,
 			lockedUsers,
 			usersWithPositiveBalance,
-		};
+		});
 	};
 
-	return logStats;
+	return { calculateStats, stats };
 };

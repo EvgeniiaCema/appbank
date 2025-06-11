@@ -3,6 +3,11 @@ export const useWithdrawMoney = ({ accounts, setAccounts, setErrorByAccount }) =
 		const updatedAccounts = [...accounts];
 		const account = updatedAccounts.find((account) => account.id === accountId);
 
+		if (amount < 0) {
+			setErrorByAccount({ id: accountId, message: "Can't withdraw negative amount" });
+			return;
+		}
+
 		if (account.isAccountLocked) {
 			setErrorByAccount({ id: accountId, message: "Account is locked" });
 			return;
