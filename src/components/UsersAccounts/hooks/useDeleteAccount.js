@@ -1,27 +1,29 @@
-export const useDeleteAccount = ({ accounts, setAccounts, setErrorByAccount }) => {
+import { useAccountsContext } from "../../../context/AccountsContext";
+
+export const useDeleteAccount = () => {
+	const { accounts, setAccounts, setErrorByAccount } = useAccountsContext();
 	const deleteAccount = (accountId) => {
-		const updatedAccounts = [...accounts];
+		const account = accounts.find((account) => account.id === accountId);
 
-		const index = updatedAccounts.findIndex((account) => account.id === accountId);
-
-		if (index === -1) {
-			setErrorByAccount({ id: accountId, message: "index isn`t find" });
+		if (!account) {
+			setErrorByAccount("account isn`t find");
 			return;
 		}
 
-		if (updatedAccounts[index].balance > 0) {
-			setErrorByAccount({ id: accountId, message: `Account cannot be deleted. Balance: ${updatedAccounts[index].balance}` });
+		if (account.balance > 0) {
+			setErrorByAccount(`Account cannot be deleted. Balance: ${account.balance}`);
 			return;
 		}
 
-		if (updatedAccounts[index].isAccountLocked) {
-			setErrorByAccount({ id: accountId, message: "Account cannot be deleted, it`s locked" });
+		if (account.isAccountLocked) {
+			setErrorByAccount("Account cannot be deleted, it`s locked");
 			return;
 		}
 
-		updatedAccounts.splice(index, 1);
+		const updatedAccounts = accounts.filter((account) => accountId !== account.id);
+
 		setAccounts(updatedAccounts);
-		setErrorByAccount({ id: null, message: "" });
+		setErrorByAccount(null);
 	};
 
 	return deleteAccount;

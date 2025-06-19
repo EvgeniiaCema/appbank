@@ -1,19 +1,27 @@
-export const useLockedAccount = ({ accounts, setAccounts, setErrorByAccount }) => {
+import { useAccountsContext } from "../../../context/AccountsContext";
+
+export const useLockedAccount = () => {
+	const { accounts, setAccounts, setErrorByAccount } = useAccountsContext();
+
 	const lockAccount = (accountId) => {
-		const updatedAccounts = [...accounts];
-		const user = updatedAccounts.find((account) => account.id === accountId);
+		const user = accounts.find((account) => account.id === accountId);
 
 		if (!user) {
-			setErrorByAccount({ id: accountId, message: "This account does not exist" });
+			setErrorByAccount("This account does not exist");
 			return;
 		}
 
-		if (!user.isAccountLocked) {
-			user.isAccountLocked = true;
-			setErrorByAccount({ id: null, message: "" });
-		} else {
-			setErrorByAccount({ id: accountId, message: "Your account is already locked" });
+		if (user.isAccountLocked) {
+			setErrorByAccount("Your account is already locked");
+			return;
 		}
+
+		const updatedAccounts = accounts.map((account) => {
+			if (account.id === accountId) {
+				return { ...account, isAccountLocked: (account.isAccountLocked = true) };
+			}
+			return account;
+		});
 
 		setAccounts(updatedAccounts);
 	};

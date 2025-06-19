@@ -1,29 +1,35 @@
-export const useWithdrawMoney = ({ accounts, setAccounts, setErrorByAccount }) => {
+import { useAccountsContext } from "../../../context/AccountsContext";
+
+export const useWithdrawMoney = () => {
+	const { accounts, setAccounts, setErrorByAccount } = useAccountsContext();
+
 	const withdrawMoney = (accountId, amount) => {
-		const updatedAccounts = [...accounts];
-		const account = updatedAccounts.find((account) => account.id === accountId);
+		const account = accounts.find((account) => account.id === accountId);
 
 		if (amount < 0) {
-			setErrorByAccount({ id: accountId, message: "Can't withdraw negative amount" });
+			setErrorByAccount("Can't withdraw negative amount");
 			return;
 		}
 
 		if (account.isAccountLocked) {
-			setErrorByAccount({ id: accountId, message: "Account is locked" });
+			setErrorByAccount("Account is locked");
 			return;
 		}
 
 		if (account.balance < amount) {
-			setErrorByAccount({ id: accountId, message: "Not enough money" });
-
+			setErrorByAccount("Not enough money");
 			return;
 		}
 
-		if (account) {
-			account.balance -= +amount;
-			setAccounts(updatedAccounts);
-			setErrorByAccount({ id: null, message: "" });
-		}
+		const updatedAccounts = accounts.map((account) => {
+			if (account.id === accountId) {
+				return { ...account, balance: account.balance - amount };
+			}
+			return account;
+		});
+
+		setAccounts(updatedAccounts);
+		setErrorByAccount(null);
 	};
 
 	return withdrawMoney;

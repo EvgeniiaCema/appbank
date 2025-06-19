@@ -1,23 +1,27 @@
-export const useDepositMoney = ({ accounts, setAccounts, setErrorByAccount }) => {
+import { useAccountsContext } from "../../../context/AccountsContext";
+
+export const useDepositMoney = () => {
+	const { accounts, setAccounts, setErrorByAccount } = useAccountsContext();
+
 	const depositMoney = (accountId, amount) => {
-		const updatedAccounts = [...accounts];
-		const account = updatedAccounts.find((account) => account.id === accountId);
+		if (amount < 0) {
+			setErrorByAccount("Can't deposit negative amount");
+			return;
+		}
+
+		const account = accounts.find((account) => account.id === accountId);
 
 		if (account.isAccountLocked) {
-			setErrorByAccount({ id: accountId, message: "Account is locked" });
+			setErrorByAccount("Account is locked");
 			return;
 		}
 
-		if (amount < 0) {
-			setErrorByAccount({ id: accountId, message: "Can't deposit negative amount" });
-			return;
-		}
+		const updatedAccounts = accounts.map((account) =>
+			account.id === accountId ? { ...account, balance: account.balance + Number(amount) } : account
+		);
 
-		if (account) {
-			account.balance += +amount;
-			setAccounts(updatedAccounts);
-			setErrorByAccount({ id: null, message: "" });
-		}
+		setAccounts(updatedAccounts);
+		setErrorByAccount(null);
 	};
 
 	return depositMoney;

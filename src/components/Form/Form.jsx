@@ -1,14 +1,16 @@
 import { useState } from "react";
-
+import { useAccountsContext } from "../../context/AccountsContext";
 import { useCreateAccount } from "./hooks/useCreateAccount";
 
 import styles from "./Form.module.scss";
 
-export const Form = ({ accounts, setAccounts }) => {
+export const Form = () => {
 	const [messageError, setMessageError] = useState("");
 
 	const [name, setName] = useState("");
 	const [surname, setSurname] = useState("");
+
+	const { accounts, setAccounts } = useAccountsContext();
 
 	const createAnAccount = useCreateAccount({ accounts, setAccounts, setMessageError });
 

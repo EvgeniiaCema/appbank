@@ -1,6 +1,4 @@
-import { useState } from "react";
-
-import { MOCK_USERS_DATA } from "./Users.data";
+import { AccountsProvider } from "./context/AccountsProvider";
 
 import { Form } from "./components/form/form";
 import { Account } from "./components/UsersAccounts/components/Account";
@@ -10,16 +8,11 @@ import { BankStatisticsPanel } from "./components/BankStatisticsPanel/BankStatis
 import "./styles/global.scss";
 
 export function App() {
-	const [accounts, setAccounts] = useState(MOCK_USERS_DATA);
-
 	return (
-		<>
-			<Form accounts={accounts} setAccounts={setAccounts} />
-			<UsersAccounts
-				accounts={accounts}
-				onRenderAccount={(account) => <Account key={account.id} account={account} accounts={accounts} setAccounts={setAccounts} />}
-			/>
-			<BankStatisticsPanel accounts={accounts} />
-		</>
+		<AccountsProvider>
+			<Form />
+			<UsersAccounts onRenderAccount={(account) => <Account key={account.id} account={account} />} />
+			<BankStatisticsPanel />
+		</AccountsProvider>
 	);
 }
