@@ -1,12 +1,8 @@
-export const useCreateAccount = ({ accounts, setAccounts, setMessageError }) => {
-	const createAnAccount = (e, name, surname) => {
-		e.preventDefault();
+import { useAccountsContext } from "../../../context/hooks/useAccountsContext";
 
-		if (!name.trim() || !surname.trim()) {
-			setMessageError("The Name or Surname field is not filled in");
-			return;
-		}
-
+export const useCreateAccount = () => {
+	const { accounts, setAccounts } = useAccountsContext();
+	const createAnAccount = (name, surname) => {
 		const newAccount = {
 			id: Math.random(),
 			name: name,
@@ -19,7 +15,6 @@ export const useCreateAccount = ({ accounts, setAccounts, setMessageError }) => 
 
 		if (!isAccountExists) {
 			setAccounts((prev) => [newAccount, ...prev]);
-			setMessageError("");
 		}
 	};
 

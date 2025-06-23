@@ -1,4 +1,4 @@
-import { useAccountsContext } from "../../../context/AccountsContext";
+import { useAccountsContext } from "../../../context/hooks/useAccountsContext";
 
 export const useDepositMoney = () => {
 	const { accounts, setAccounts, setErrorByAccount } = useAccountsContext();

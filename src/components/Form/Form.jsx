@@ -1,52 +1,53 @@
-import { useState } from "react";
-import { useAccountsContext } from "../../context/AccountsContext";
+import { useForm } from "react-hook-form";
 import { useCreateAccount } from "./hooks/useCreateAccount";
 
-import styles from "./Form.module.scss";
-
 export const Form = () => {
-	const [messageError, setMessageError] = useState("");
+	const {
+		register,
+		handleSubmit,
+		formState: { errors, isValid },
+		reset,
+	} = useForm({
+		mode: "onBlur",
+	});
 
-	const [name, setName] = useState("");
-	const [surname, setSurname] = useState("");
+	const createAnAccount = useCreateAccount();
 
-	const { accounts, setAccounts } = useAccountsContext();
-
-	const createAnAccount = useCreateAccount({ accounts, setAccounts, setMessageError });
-
-	const handleSubmit = (e) => {
-		const success = createAnAccount(e, name, surname);
-
-		if (success) {
-			setName("");
-			setSurname("");
-		}
+	const onSubmit = (data) => {
+		createAnAccount(data.name, data.username);
+		reset();
 	};
-
-	const handelSetName = (e) => {
-		setName(e.target.value);
-	};
-
-	const handelSetSurname = (e) => {
-		setSurname(e.target.value);
-	};
-
 	return (
-		<>
-			<form>
-				<label>
-					User name:
-					<input type="text" name="username" placeholder="name" value={name} onChange={handelSetName} />
-				</label>
-				<label>
-					User surname:
-					<input type="text" name="surname" placeholder="surname" value={surname} onChange={handelSetSurname} />
-				</label>
-				<button type="submit" onClick={handleSubmit}>
-					Create account
-				</button>
-			</form>
-			<div className={styles.error}>{setMessageError ? `${messageError}` : ""}</div>
-		</>
+		<form onSubmit={handleSubmit(onSubmit)}>
+			<label>
+				User name:
+				<input
+					{...register("name", {
+						required: true,
+						minLength: {
+							value: 2,
+							message: "minimum 2 characters of name",
+						},
+					})}
+				/>
+			</label>
+			<label>
+				User surname:
+				<input
+					{...register("surname", {
+						required: true,
+						minLength: {
+							value: 2,
+							message: "minimum 2 characters of surname",
+						},
+					})}
+				/>
+			</label>
+			<button type="submit" disabled={!isValid}>
+				Create account
+			</button>
+			{errors?.name && <span>{errors?.name?.message || "This field name is required"}</span>}
+			{errors?.surname && <span>{errors?.surname?.message || "This field surname is required"}</span>}
+		</form>
 	);
 };

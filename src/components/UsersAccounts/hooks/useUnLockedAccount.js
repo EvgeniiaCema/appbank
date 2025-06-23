@@ -1,4 +1,4 @@
-import { useAccountsContext } from "../../../context/AccountsContext";
+import { useAccountsContext } from "../../../context/hooks/useAccountsContext";
 
 export const useUnLockedAccount = () => {
 	const { accounts, setAccounts, setErrorByAccount } = useAccountsContext();
@@ -17,7 +17,7 @@ export const useUnLockedAccount = () => {
 
 		const updatedAccounts = accounts.map((account) => {
 			if (account.id === accountId) {
-				return { ...account, isAccountLocked: (account.isAccountLocked = false) };
+				return { ...account, isAccountLocked: false };
 			}
 			return account;
 		});

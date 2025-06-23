@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useGetStats } from "./hooks/useGetStats.js";
-import { useAccountsContext } from "../../context/AccountsContext";
+import { useAccountsContext } from "../../context/hooks/useAccountsContext.js";
 
 import { Modal } from "../Modal/Modal.jsx";
 

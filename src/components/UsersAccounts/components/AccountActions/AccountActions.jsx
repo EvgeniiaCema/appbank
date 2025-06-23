@@ -1,8 +1,15 @@
 import { useState } from "react";
+import { useDepositMoney } from "../../hooks/useDepositMoney";
+import { useWithdrawMoney } from "../../hooks/useWithdrawMoney";
+import { useTransferMoney } from "../../hooks/useTransferMoney";
 
-export const AccountActions = ({ account, depositMoney, withdrawMoney, transferMoney }) => {
+export const AccountActions = ({ account }) => {
 	const [amounts, setAmounts] = useState(0);
 	const [numberRecipientId, setNumberRecipientId] = useState(0);
+
+	const depositMoney = useDepositMoney();
+	const withdrawMoney = useWithdrawMoney();
+	const transferMoney = useTransferMoney();
 
 	const handleAmountChange = (event) => {
 		setAmounts(+event.target.value);
